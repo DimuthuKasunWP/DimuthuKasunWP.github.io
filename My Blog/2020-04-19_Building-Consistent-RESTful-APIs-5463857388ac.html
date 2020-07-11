@@ -1,0 +1,72 @@
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>Building Consistent RESTful APIs</title><style>
+      * {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        font-size: 50px;
+        margin-bottom: 17px;
+        color: #333;
+      }
+      h2 {
+        font-size: 24px;
+        line-height: 1.6;
+        margin: 30px 0 0 0;
+        margin-bottom: 18px;
+        margin-top: 33px;
+        color: #333;
+      }
+      h3 {
+        font-size: 30px;
+        margin: 10px 0 20px 0;
+        color: #333;
+      }
+      header {
+        width: 640px;
+        margin: auto;
+      }
+      section {
+        width: 640px;
+        margin: auto;
+      }
+      section p {
+        margin-bottom: 27px;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #333;
+      }
+      section img {
+        max-width: 640px;
+      }
+      footer {
+        padding: 0 20px;
+        margin: 50px 0;
+        text-align: center;
+        font-size: 12px;
+      }
+      .aspectRatioPlaceholder {
+        max-width: auto !important;
+        max-height: auto !important;
+      }
+      .aspectRatioPlaceholder-fill {
+        padding-bottom: 0 !important;
+      }
+      header,
+      section[data-field=subtitle],
+      section[data-field=description] {
+        display: none;
+      }
+      </style></head><body><article class="h-entry">
+<header>
+<h1 class="p-name">Building Consistent RESTful APIs</h1>
+</header>
+<section data-field="subtitle" class="p-summary">
+When it comes to building RESTful APIs, the applications are limitless while the standards and/or best practices remain the same across…
+</section>
+<section data-field="body" class="e-content">
+<section name="e38a" class="section section--body section--first section--last"><div class="section-divider"><hr class="section-divider"></div><div class="section-content"><div class="section-inner sectionLayout--insetColumn"><h3 name="c62b" id="c62b" class="graf graf--h3 graf--leading graf--title">Building Consistent RESTful APIs</h3><p name="942e" id="942e" class="graf graf--p graf-after--h3">When it comes to building RESTful APIs, the applications are limitless while the standards and/or best practices remain the same across different stacks. This is an attempt to portray some of those standards and best practices (highly opinionated).</p><h3 name="3b05" id="3b05" class="graf graf--h3 graf-after--p">Authorization</h3><p name="6b68" id="6b68" class="graf graf--p graf-after--h3">Representational State Transfer (REST) effectively invalidates sessions and as such, our applications require another way of authorizing users trying to access it. One of the most commonly used tools for authorization is <a href="https://jwt.io/introduction/" data-href="https://jwt.io/introduction/" class="markup--anchor markup--p-anchor" rel="noopener" target="_blank">JSON Web Tokens-JWT</a>. Once a user logs in or signs up to our application, a token is assigned to that user for a period of time (the length depends largely on the security concerns of your application). A good practice is to add a unique identifier to the token so each request to our application can serve the particular user making that request without asking for extra parameters from the user.</p><p name="0b0f" id="0b0f" class="graf graf--p graf-after--p">For example, if I am logged in using JWT, and I attempt to retrieve all transactions I have made on the application, the application should be able to provide ONLY my transactions based on my JWT authorization token.</p><p name="bf6f" id="bf6f" class="graf graf--p graf-after--p">Without going into implementation details, one can achieve this by having a service intercept incoming requests, process the JWT token and set a current_user object or variable accessible throughout the application.</p><h3 name="6d6d" id="6d6d" class="graf graf--h3 graf-after--p">Resources, Actions, and HTTP Methods</h3><p name="6bef" id="6bef" class="graf graf--p graf-after--h3">In REST we have resources, which can represent database tables, e.g companies, users, posts, messages, etc. Every resource has a list of actions that can be performed on it. These actions are determined by the HTTP method on each request to that resource. HTTP Methods are also referred to as HTTP VERBS because they perform/determine actions. Given a resource, <em class="markup--em markup--p-em">transactions</em>, below are some of the most common corresponding HTTP Methods and actions.</p><p name="d2fb" id="d2fb" class="graf graf--p graf-after--p"><strong class="markup--strong markup--p-strong">GET — /transactions</strong> (get all transactions)<br><strong class="markup--strong markup--p-strong">GET — /transactions/:id</strong> (get a single transaction)<br><strong class="markup--strong markup--p-strong">POST — /transactions</strong> (create a new transaction)<br><strong class="markup--strong markup--p-strong">PATCH — /transactions/:id</strong> (update parts of a transaction)<br><strong class="markup--strong markup--p-strong">PUT — /transactions/:id</strong> (update a transaction)<br><strong class="markup--strong markup--p-strong">DELETE — /transactions/:id</strong> (delete a transaction)</p><p name="c1da" id="c1da" class="graf graf--p graf-after--p">Depending on the scale of your application, you may need to extend the actions available on your resource by custom endpoints. Custom endpoints can either affect the entire resource (collection) or a member of the resource. For actions affecting the collection, it is as follows:</p><p name="ae09" id="ae09" class="graf graf--p graf-after--p"><strong class="markup--strong markup--p-strong">GET — /transactions/users</strong> (get all users that have made transactions)<br><strong class="markup--strong markup--p-strong">GET — /transactions/failed</strong> (get all failed transactions)</p><p name="4deb" id="4deb" class="graf graf--p graf-after--p">For a member, assuming we have a separate but related resource for a transaction details:</p><p name="782e" id="782e" class="graf graf--p graf-after--p"><strong class="markup--strong markup--p-strong">GET — /transactions/:id/details</strong> (get the details of a transaction)<br><strong class="markup--strong markup--p-strong">POST -/transactions/:id/details</strong> (create details for a transaction)<br><strong class="markup--strong markup--p-strong">PUT -/transactions/:id/details</strong> (update the details of a transaction).</p><h4 name="43e1" id="43e1" class="graf graf--h4 graf-after--p">200 — OK</h4><p name="34a8" id="34a8" class="graf graf--p graf-after--h4">The request was completed. You can’t go wrong with a 200 status if the action requested for was completed successfully however, there might be more appropriate status messages depending on the action.</p><h3 name="4082" id="4082" class="graf graf--h3 graf-after--p">201 — Created</h3><p name="03e6" id="03e6" class="graf graf--p graf-after--h3">Ideally, this should be returned whenever a new object is created (mostly with a <strong class="markup--strong markup--p-strong">POST</strong> request) alongside the object that was created. Returning the object that was created is a personal preference as it grants access to the newly created object immediately.</p><h3 name="ec08" id="ec08" class="graf graf--h3 graf-after--p">204 — No Content</h3><p name="4da3" id="4da3" class="graf graf--p graf-after--h3">This can and <em class="markup--em markup--p-em">should</em> be returned after a <strong class="markup--strong markup--p-strong">DELETE</strong> has been completed on an object.</p><h3 name="dd5f" id="dd5f" class="graf graf--h3 graf-after--p">401 — Unauthorized</h3><p name="280e" id="280e" class="graf graf--p graf-after--h3">This is appropriate when a user tries an action that requires authorization but the request doesn’t possess that authorization.</p><h3 name="e3eb" id="e3eb" class="graf graf--h3 graf-after--p">404 — Not Found</h3><p name="85d0" id="85d0" class="graf graf--p graf-after--h3 graf--trailing">Highly unlikely but if a user requests for a resource that doesn’t exist, 404 is the appropriate status to respond with. Albeit based on your use case, returning <em class="markup--em markup--p-em">200 — ok</em> and an empty result may be more appropriate.</p></div></div></section>
+</section>
+</article></body></html>
